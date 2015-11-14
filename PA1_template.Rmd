@@ -11,8 +11,25 @@ str(data)
 
 ```{r}
 library(lattice)
-#calculating the total and mean steps
+#calculating the total and mean
 dailysteps <- aggregate(steps ~ date, data = data, sum, na.rm = T)
-head(dailysteps)
-
 ```
+
+```{r}
+#plotting the total steps and mean
+hist(dailysteps$steps, main = "total steps taken by day", xlab = "steps per day", ylab = "frequency of days")
+abline(v=mean(dailysteps$steps),col="red",lwd=10)
+```
+
+```{r}
+#the mean of the steps:
+mean(dailysteps$steps)
+#the median of the steps:
+median(dailysteps$steps)
+```
+
+```{r}
+#time series and average number...
+tseries <- tapply(data$steps, data$interval, mean, na.rm =T)
+#plotting the time series data
+plot(row.names(tseries), tseries, type = "l", xlab = "five minutes int", ylab = "average steps all days", main = "average steps taken", col="red")
