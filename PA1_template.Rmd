@@ -65,5 +65,40 @@ for (k in 1:nrow(data)) {
 ```
 
 ```{r}
+#refilling the NAs with the data calculated above
 new_data <- data
 new_data$steps <- fill
+```
+
+```{r}
+totalsteps <- aggregate(steps ~ date, data = new_data, sum, na.rm = T)
+hist(totalsteps$steps, main = "total no of steps taken each day", xlab = "day")
+#with the mean and median as:
+abline(v=mean(totalsteps$steps), col="blue", lwd=8)
+```
+
+```{r}
+#mean total steps is:
+mean(totalsteps$steps)
+```
+
+```{r}
+# median total steps is:
+median(totalsteps$steps)
+```
+
+```{r}
+#creating a factor variable 
+data$day <- ifelse(as.POSIXlt(data$date)$wday %in% c(0,6), 'weekend', 'weekday')
+stepsday <-aggregate(steps ~ interval + day, data=data, mean)
+```
+
+```{r}
+library(ggplot2)
+ggplot(stepsday, aes(interval, steps)) + 
+  geom_line() + 
+  facet_grid(day ~ .) + 
+  xlab("5 min interval") +
+  ylab("averaged across weekends and weekdays")
+
+
